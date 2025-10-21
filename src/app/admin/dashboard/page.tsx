@@ -161,7 +161,7 @@ export default function AdminDashboard() {
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-12 py-12">
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-bold">Dashboard Management</h1>
+            <h1 className="text-3xl font-bold">Dashboard</h1>
             <Button onClick={() => router.push("/admin/edit/new")} className="gap-2 bg-blue-400">
               <Plus className="h-4 w-4" />
               Buat Event Baru

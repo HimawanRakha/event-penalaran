@@ -61,17 +61,19 @@ export default function HomePage() {
       </section>
 
       {/* Events Section */}
-      <section id="events" className="py-8 flex-1 px-20">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8 justify-center text-center">Event Penalaran</h2>
-          <InputGroup className="max-w-3/5 mx-auto mb-12 h-12">
+      <section id="events" className="py-8 flex-1 px-12 sm:px-16 lg:px-20">
+        <div className="container mx-auto px-2 sm:px-4">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-center">Event Penalaran</h2>
+
+          {/* Input Search */}
+          <InputGroup className="w-full max-w-md mx-auto mb-8 sm:mb-12 h-10 sm:h-12">
             <InputGroupInput placeholder="Search..." />
-            <InputGroupAddon className="h-12">
+            <InputGroupAddon className="h-10 sm:h-12">
               <Search />
             </InputGroupAddon>
           </InputGroup>
 
-          {/* --- PERBAIKI: Tambahkan state Loading dan Error --- */}
+          {/* Loading / Error / Empty / Events */}
           {isLoading ? (
             <div className="text-center py-12">
               <p className="text-gray-500">Memuat event...</p>
@@ -85,7 +87,7 @@ export default function HomePage() {
               <p className="text-gray-500 mb-4">Belum ada event tersedia</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {events.map((event) => (
                 <EventCard key={event._id} event={event} />
               ))}
@@ -93,6 +95,7 @@ export default function HomePage() {
           )}
         </div>
       </section>
+
       {/* <Footer /> */}
     </div>
   );

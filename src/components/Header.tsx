@@ -33,7 +33,7 @@ export function Header() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center font-bold text-lg ps-4">
           <Image src="/logo-penalaran.JPG" alt="EventPenalaran Logo" width={32} height={32} className="mr-2" />
-          <span>EventPenalaran</span>
+          <span className="hidden sm:inline">EventPenalaran</span>
         </Link>
 
         <nav className="flex items-center h-16">
