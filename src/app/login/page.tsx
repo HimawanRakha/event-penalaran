@@ -69,18 +69,19 @@ export default function Login() {
               </div>
             </div>
           </CardContent>
-
-          <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full">
-              Login
-            </Button>
-            <p className="text-sm text-center text-gray-600">
-              Belum punya akun?{" "}
-              <Link href="/register" className="text-gray-900 hover:underline">
-                Daftar di sini
-              </Link>
-            </p>
-          </CardFooter>
+          <div className="pt-4">
+            <CardFooter className="flex flex-col gap-4">
+              <Button type="submit" className="w-full">
+                Login
+              </Button>
+              <p className="text-sm text-center text-gray-600">
+                Belum punya akun?{" "}
+                <Link href="/register" className="text-gray-900 hover:underline">
+                  Daftar di sini
+                </Link>
+              </p>
+            </CardFooter>
+          </div>
         </form>
       </Card>
     </div>

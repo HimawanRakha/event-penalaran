@@ -82,18 +82,19 @@ export default function Register() {
               <Input id="adminCode" type="text" value={adminCode} onChange={(e) => setAdminCode(e.target.value)} placeholder="Kosongkan jika Anda anggota" />
             </div>
           </CardContent>
-
-          <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full">
-              Daftar
-            </Button>
-            <p className="text-sm text-center text-gray-600">
-              Sudah punya akun?{" "}
-              <Link href="/login" className="text-gray-900 hover:underline">
-                Login di sini
-              </Link>
-            </p>
-          </CardFooter>
+          <div className="pt-4">
+            <CardFooter className="flex flex-col gap-4">
+              <Button type="submit" className="w-full">
+                Daftar
+              </Button>
+              <p className="text-sm text-center text-gray-600">
+                Sudah punya akun?{" "}
+                <Link href="/login" className="text-gray-900 hover:underline">
+                  Login di sini
+                </Link>
+              </p>
+            </CardFooter>
+          </div>
         </form>
       </Card>
     </div>
