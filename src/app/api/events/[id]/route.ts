@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/route";
 import dbConnect from "@/lib/dbConnect";
@@ -12,14 +12,7 @@ interface Params {
 }
 
 // GET: Mengambil SATU event (Publik)
-export async function GET(request: Request, { params }: Params) {
-  try {
-    await request.text();
-  } catch (e) {
-    // Abaikan error jika body kosong atau sudah dibaca
-  }
-  // -------------------------
-
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   const { id } = params;
   try {
     await dbConnect();
