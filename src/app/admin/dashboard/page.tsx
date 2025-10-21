@@ -64,8 +64,12 @@ export default function AdminDashboard() {
           if (!res.ok) throw new Error("Gagal memuat event");
           const data = await res.json();
           setEvents(data.events || []);
-        } catch (err: any) {
-          setError(err.message);
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            setError(err.message);
+          } else {
+            setError("Terjadi kesalahan yang tidak diketahui");
+          }
         } finally {
           setIsLoading(false);
         }
@@ -98,8 +102,12 @@ export default function AdminDashboard() {
       // Hapus event dari state secara lokal
       setEvents((prevEvents) => prevEvents.filter((event) => event._id !== selectedEventId));
       alert("Event berhasil dihapus");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Terjadi kesalahan yang tidak diketahui");
+      }
     } finally {
       setIsDeleteAlertOpen(false);
       setSelectedEventId(null);
@@ -120,8 +128,12 @@ export default function AdminDashboard() {
       if (!res.ok) throw new Error("Gagal memuat pendaftar");
       const data = await res.json();
       setRegistrants(data.registrants || []);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Terjadi kesalahan yang tidak diketahui");
+      }
     } finally {
       setIsLoadingRegistrants(false);
     }
@@ -255,7 +267,7 @@ export default function AdminDashboard() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Apakah Anda Yakin?</AlertDialogTitle>
-            <AlertDialogDescription>Tindakan ini akan menghapus event "{selectedEventTitle}" secara permanen. Semua data pendaftaran terkait juga akan dihapus.</AlertDialogDescription>
+            <AlertDialogDescription>Tindakan ini akan menghapus event {selectedEventTitle} secara permanen. Semua data pendaftaran terkait juga akan dihapus.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Batal</AlertDialogCancel>

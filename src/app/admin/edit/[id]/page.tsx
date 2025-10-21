@@ -24,7 +24,6 @@ export default function CreateEditEvent() {
   const [images, setImages] = useState<string[]>([""]);
   const [spsLink, setSpsLink] = useState("");
   const [isLoading, setIsLoading] = useState(!isCreateMode);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -59,8 +58,12 @@ export default function CreateEditEvent() {
             setError("Event tidak ditemukan");
             router.push("/admin/dashboard");
           }
-        } catch (err: any) {
-          setError(err.message);
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            setError(err.message);
+          } else {
+            setError("Terjadi kesalahan yang tidak diketahui");
+          }
         } finally {
           setIsLoading(false); // Selesai loading
         }
@@ -121,8 +124,12 @@ export default function CreateEditEvent() {
 
       alert(isCreateMode ? "Event berhasil dibuat" : "Event berhasil diupdate");
       router.push("/admin/dashboard");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Terjadi kesalahan yang tidak diketahui");
+      }
     }
   };
 
