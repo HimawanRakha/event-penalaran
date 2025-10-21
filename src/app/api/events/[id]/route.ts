@@ -27,7 +27,8 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
 }
 
 // PUT: Mengupdate SATU event (Hanya Admin)
-export async function PUT(request: Request, { params }: Params) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await getServerSession(authOptions);
   const user = session?.user as IUser;
 
@@ -38,7 +39,7 @@ export async function PUT(request: Request, { params }: Params) {
   try {
     await dbConnect();
     const body = await request.json();
-    const updatedEvent = await EventModel.findByIdAndUpdate(params.id, body, {
+    const updatedEvent = await EventModel.findByIdAndUpdate(id, body, {
       new: true,
       runValidators: true,
     });
@@ -53,7 +54,8 @@ export async function PUT(request: Request, { params }: Params) {
 }
 
 // DELETE: Menghapus SATU event (Hanya Admin)
-export async function DELETE(request: Request, { params }: Params) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await getServerSession(authOptions);
   const user = session?.user as IUser;
 
@@ -63,14 +65,14 @@ export async function DELETE(request: Request, { params }: Params) {
 
   try {
     await dbConnect();
-    const deletedEvent = await EventModel.findByIdAndDelete(params.id);
+    const deletedEvent = await EventModel.findByIdAndDelete(id);
 
     if (!deletedEvent) {
       return NextResponse.json({ message: "Event tidak ditemukan" }, { status: 404 });
     }
 
     // Juga hapus semua registrasi yang terkait dengan event ini
-    await RegistrationModel.deleteMany({ event: params.id });
+    await RegistrationModel.deleteMany({ event: id });
 
     return NextResponse.json({ message: "Event dan registrasi terkait dihapus" }, { status: 200 });
   } catch (error) {
