@@ -2,6 +2,13 @@
   "name": "event-penalaran",
   "version": "0.1.0",
   "private": true,
+  "eslintConfig": {
+    "extends": ["plugin:react/recommended"],
+    "rules": {
+      "@typescript-eslint/no-explicit-any": "warn",
+      "react/no-unescaped-entities": "warn"
+    }
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
