@@ -12,8 +12,8 @@ interface Params {
 }
 
 // GET: Mengambil SATU event (Publik)
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
+  const { id } = await context.params;
   try {
     await dbConnect();
     const event = await EventModel.findById(id).populate("creator", "name");
