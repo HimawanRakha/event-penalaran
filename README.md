@@ -1,29 +1,5 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Konfigurasi Backend JSP
-
-Aplikasi ini menggunakan backend JSP dengan MongoDB Atlas. Pastikan backend JSP berjalan sebelum menggunakan aplikasi frontend.
-
-### Setup Environment Variables
-
-Buat file `.env.local` di root project dengan konfigurasi berikut:
-
-```env
-# URL Backend JSP (default: http://localhost:8080)
-NEXT_PUBLIC_BACKEND_URL=http://localhost:8080
-
-# MongoDB URI untuk Next.js API routes (jika masih digunakan)
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/database?retryWrites=true&w=majority
-```
-
-**Penting:**
-
-- Pastikan backend JSP berjalan di port yang sesuai dengan `NEXT_PUBLIC_BACKEND_URL`
-- Backend JSP harus mengembalikan data dalam format:
-  - GET `/api/events` → Array langsung: `[{id, title, ...}, ...]`
-  - GET `/api/events/{id}` → Object langsung: `{id, title, ...}`
-  - Event menggunakan field `id` (bukan `_id`)
-
 ## Getting Started
 
 First, run the development server:
