@@ -1,8 +1,6 @@
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import dbConnect from "@/lib/dbConnect";
-import UserModel from "@/models/User";
-import bcrypt from "bcryptjs";
+import { fetchAPI } from "@/utils/api";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -17,28 +15,26 @@ export const authOptions: AuthOptions = {
           throw new Error("Email dan password wajib diisi");
         }
 
-        await dbConnect();
+        try {
+          // Panggil Spring Boot BE untuk login
+          const response = await fetchAPI("/api/auth/login", {
+            method: "POST",
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+            }),
+          });
 
-        const user = await UserModel.findOne({ email: credentials.email }).select("+password");
-        if (!user) {
-          throw new Error("User tidak ditemukan");
+          // Spring Boot return AuthResponse dengan id, name, email, role
+          return {
+            id: response.id,
+            name: response.name,
+            email: response.email,
+            role: response.role.toLowerCase(), // Convert ADMIN -> admin untuk konsistensi
+          };
+        } catch (error: any) {
+          throw new Error(error.message || "Email atau password salah");
         }
-
-        if (!user || !user.password) {
-          throw new Error("User tidak ditemukan atau data tidak lengkap");
-        }
-
-        const isPasswordMatch = await bcrypt.compare(credentials.password, user.password);
-        if (!isPasswordMatch) {
-          throw new Error("Password salah");
-        }
-
-        return {
-          id: user.id.toString(),
-          name: user.name,
-          email: user.email,
-          role: user.role,
-        };
       },
     }),
   ],

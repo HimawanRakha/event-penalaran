@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EventPenalaran",
-  description: "EventPenalaran",
+  title: "ManageEvent - Temukan dan Ikuti Event Terbaik",
+  description: "ManageEvent",
 };
 
 export default function RootLayout({

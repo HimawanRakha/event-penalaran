@@ -7,6 +7,7 @@ import { Label } from "../../../../components/ui/label";
 import { Textarea } from "../../../../components/ui/textarea";
 import { Card } from "../../../../components/ui/card";
 import { useSession } from "next-auth/react";
+import { fetchAPI } from "@/utils/api";
 
 export default function CreateEditEvent() {
   const params = useParams();
@@ -20,6 +21,7 @@ export default function CreateEditEvent() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
   const [location, setLocation] = useState("");
   const [images, setImages] = useState<string[]>([""]);
   const [spsLink, setSpsLink] = useState("");
@@ -39,18 +41,16 @@ export default function CreateEditEvent() {
     if (!isCreateMode && isLoading && status === "authenticated" && isAdmin) {
       const fetchEventData = async () => {
         try {
-          const res = await fetch(`/api/events/${id}`); // Panggil API
-          if (!res.ok) {
-            throw new Error("Gagal mengambil data event");
-          }
-          const data = await res.json();
-          const event = data.event; // Sesuai API yang kita buat
+          // UBAH: Pakai fetchAPI ke backend JSP
+          // Backend JSP return object Event langsung, bukan { event: ... }
+          const event = await fetchAPI(`/api/events/${id}`);
 
           if (event) {
             setTitle(event.title);
             setDescription(event.description);
             // Format tanggal agar sesuai dengan <input type="date">
             setDate(new Date(event.date).toISOString().split("T")[0]);
+            setTime(event.time || "");
             setLocation(event.location);
             setImages(event.images && event.images.length > 0 ? event.images : [""]);
             setSpsLink(event.spsLink || "");
@@ -84,7 +84,7 @@ export default function CreateEditEvent() {
 
     const validImages = images.filter((img) => img.trim() !== "");
 
-    if (!title || !description || !date || !location || validImages.length === 0) {
+    if (!title || !description || !date || !time || !location || validImages.length === 0) {
       setError("Mohon isi semua field dan minimal satu gambar");
       return;
     }
@@ -93,6 +93,7 @@ export default function CreateEditEvent() {
       title,
       description,
       date,
+      time,
       location,
       images: validImages,
       spsLink: spsLink.trim() || undefined,
@@ -100,26 +101,19 @@ export default function CreateEditEvent() {
     };
 
     try {
-      let response;
+      // UBAH: Pakai fetchAPI ke backend JSP
       if (isCreateMode) {
         // Panggil API POST untuk BUAT BARU
-        response = await fetch("/api/events", {
+        await fetchAPI("/api/events", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(eventData),
         });
       } else {
         // Panggil API PUT untuk UPDATE
-        response = await fetch(`/api/events/${id}`, {
+        await fetchAPI(`/api/events/${id}`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(eventData),
         });
-      }
-
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.message || "Gagal menyimpan data");
       }
 
       alert(isCreateMode ? "Event berhasil dibuat" : "Event berhasil diupdate");
@@ -193,9 +187,16 @@ export default function CreateEditEvent() {
               <div className="space-y-4">
                 <h3>Logistik</h3>
 
-                <div className="space-y-2">
-                  <Label htmlFor="date">Tanggal</Label>
-                  <Input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="date">Tanggal</Label>
+                    <Input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="time">Waktu</Label>
+                    <Input id="time" type="time" value={time} onChange={(e) => setTime(e.target.value)} required />
+                  </div>
                 </div>
 
                 <div className="space-y-2">
