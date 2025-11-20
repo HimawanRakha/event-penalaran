@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/route"; // Sesuaikan path
+import { authOptions } from "../../auth/[...nextauth]/route";
 import dbConnect from "@/lib/dbConnect";
 import RegistrationModel from "@/models/Registration";
 import { IUser } from "@/models/User";
@@ -20,11 +20,7 @@ export async function GET(request: Request) {
 
   try {
     await dbConnect();
-
-    // Cari registrasi dan populate data 'user' (hanya nama dan email)
     const registrations = await RegistrationModel.find({ event: eventId }).populate("user", "name email");
-
-    // Ekstrak data user dari hasil registrasi
     const registrants = registrations.map((reg) => reg.user);
 
     return NextResponse.json({ registrants });

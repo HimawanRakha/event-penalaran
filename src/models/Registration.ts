@@ -22,7 +22,6 @@ const RegistrationSchema: Schema<IRegistration> = new Schema(
   },
   {
     timestamps: true,
-    // Mencegah user mendaftar ke event yang sama dua kali
     unique: ["user", "event"],
   }
 );

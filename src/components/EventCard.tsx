@@ -6,7 +6,6 @@ import { Calendar, MapPin, Clock } from "lucide-react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
-// Tipe Event
 interface Event {
   id: string;
   title: string;
@@ -28,7 +27,6 @@ export function EventCard({ event }: EventCardProps) {
 
   const formatTime = (timeString?: string) => {
     if (!timeString) return null;
-    // Format waktu dari "HH:mm" atau "HH:mm:ss" menjadi format yang lebih readable
     const [hours, minutes] = timeString.split(":");
     return `${hours}:${minutes} WIB`;
   };
@@ -38,7 +36,6 @@ export function EventCard({ event }: EventCardProps) {
   return (
     <Link href={`/event/${event.id}`} className="block group">
       <Card className="overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 relative aspect-3/4 border-0 shadow-lg bg-white">
-        {/* Image Container */}
         <div className="absolute inset-0 w-full h-full bg-gray-100">
           <ImageWithFallback
             src={images[0]}
@@ -46,11 +43,7 @@ export function EventCard({ event }: EventCardProps) {
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           />
         </div>
-
-        {/* Gradient Overlay */}
         <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
-
-        {/* Content */}
         <div className="absolute inset-0 w-full h-full flex flex-col justify-end p-5 md:p-6">
           <div className="space-y-3">
             <h3 className="font-bold text-lg md:text-xl text-white line-clamp-2 group-hover:text-blue-300 transition-colors">
@@ -76,7 +69,6 @@ export function EventCard({ event }: EventCardProps) {
               </div>
             </div>
 
-            {/* View Badge */}
             <div className="pt-2">
               <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm">
                 Lihat Detail →

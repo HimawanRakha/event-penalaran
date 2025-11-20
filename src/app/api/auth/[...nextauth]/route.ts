@@ -16,7 +16,6 @@ export const authOptions: AuthOptions = {
         }
 
         try {
-          // Panggil Spring Boot BE untuk login
           const response = await fetchAPI("/api/auth/login", {
             method: "POST",
             body: JSON.stringify({
@@ -24,13 +23,11 @@ export const authOptions: AuthOptions = {
               password: credentials.password,
             }),
           });
-
-          // Spring Boot return AuthResponse dengan id, name, email, role
           return {
             id: response.id,
             name: response.name,
             email: response.email,
-            role: response.role.toLowerCase(), // Convert ADMIN -> admin untuk konsistensi
+            role: response.role.toLowerCase(),
           };
         } catch (error: any) {
           throw new Error(error.message || "Email atau password salah");
@@ -39,7 +36,6 @@ export const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
-    // Menambahkan role dan id ke token JWT
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
@@ -47,7 +43,6 @@ export const authOptions: AuthOptions = {
       }
       return token;
     },
-    // Menambahkan role dan id ke Sesi (Client-side)
     async session({ session, token }) {
       if (session.user) {
         (session.user as any).id = token.id;
@@ -57,7 +52,7 @@ export const authOptions: AuthOptions = {
     },
   },
   pages: {
-    signIn: "/login", // Halaman login kustom Anda
+    signIn: "/login",
   },
   session: {
     strategy: "jwt",
