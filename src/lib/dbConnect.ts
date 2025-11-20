@@ -1,19 +1,11 @@
 import mongoose from "mongoose";
 
-// Ambil URI dari .env.local
 const MONGO_URI = process.env.MONGO_URI;
 
 if (!MONGO_URI) {
   throw new Error("Please define the MONGO_URI environment variable inside .env.local");
 }
-
-/**
- * Cache koneksi global.
- * Ini untuk mencegah koneksi baru dibuat setiap kali
- * ada hot-reload di mode development.
- */
 let cached = (global as any).mongoose;
-
 if (!cached) {
   cached = (global as any).mongoose = { conn: null, promise: null };
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/route"; // Sesuaikan path jika perlu
+import { authOptions } from "../../auth/[...nextauth]/route";
 import dbConnect from "@/lib/dbConnect";
 import RegistrationModel from "@/models/Registration";
 import { IUser } from "@/models/User";
@@ -15,12 +15,7 @@ export async function GET(request: Request) {
 
   try {
     await dbConnect();
-
-    // 1. Cari semua registrasi milik user ini
-    // 2. Gunakan .populate('event') untuk mengambil seluruh data event, bukan hanya ID-nya
     const registrations = await RegistrationModel.find({ user: user.id }).populate("event");
-
-    // 3. Ekstrak hanya data event dari hasil registrasi
     const myEvents = registrations.map((reg) => reg.event);
 
     return NextResponse.json({ events: myEvents });

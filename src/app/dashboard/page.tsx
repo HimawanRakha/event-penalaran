@@ -11,7 +11,6 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { fetchAPI } from "@/utils/api";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Definisikan tipe data event untuk TypeScript
 interface Event {
   id: string;
   title: string;
@@ -26,32 +25,26 @@ export default function UserDashboard() {
   const router = useRouter();
   const { data: session, status } = useSession();
 
-  // State untuk data, loading, dan dialog konfirmasi
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
 
-  // --- EFEK 1: Melindungi Halaman & Mengambil Data ---
   useEffect(() => {
-    // Jika status sesi masih loading, jangan lakukan apa-apa
     if (status === "loading") {
       return;
     }
 
-    // Jika user tidak login, tendang ke halaman login
     if (status === "unauthenticated") {
       router.push("/login");
       return;
     }
 
-    // Jika user sudah login, ambil data event-nya
     if (status === "authenticated" && session?.user) {
       const fetchUserEvents = async () => {
         try {
           setIsLoading(true);
-          // Panggil Spring Boot BE
           const user = session.user as { id: string };
           const data = await fetchAPI(`/api/registrations/my-events?userId=${user.id}`);
           setEvents(Array.isArray(data) ? data : []);
@@ -64,32 +57,24 @@ export default function UserDashboard() {
 
       fetchUserEvents();
     }
-  }, [status, router]); // Dijalankan setiap kali status sesi berubah
-
-  // --- FUNGSI BATAL DAFTAR (Menggunakan API) ---
+  }, [status, router]);
   const handleUnregister = async (eventId: string) => {
     if (!session?.user) return;
     
     try {
       const user = session.user as { id: string };
-      // Panggil Spring Boot BE DELETE endpoint
       await fetchAPI(`/api/registrations?userId=${user.id}&eventId=${eventId}`, {
         method: "DELETE",
       });
-
-      // Update state secara lokal agar UI langsung berubah tanpa refresh
       setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
       alert("Pendaftaran berhasil dibatalkan");
     } catch (err: any) {
       alert(`Gagal membatalkan: ${err.message}`);
     } finally {
-      // Tutup dialog konfirmasi
       setIsAlertOpen(false);
       setSelectedEventId(null);
     }
   };
-
-  // --- Fungsi helper ---
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("id-ID", {
@@ -101,7 +86,6 @@ export default function UserDashboard() {
 
   const formatTime = (timeString?: string) => {
     if (!timeString) return null;
-    // Format waktu dari "HH:mm" atau "HH:mm:ss" menjadi format yang lebih readable
     const [hours, minutes] = timeString.split(":");
     return `${hours}:${minutes} WIB`;
   };
@@ -115,7 +99,6 @@ export default function UserDashboard() {
       .slice(0, 2);
   };
 
-  // --- Tampilan Loading ---
   if (isLoading || status === "loading") {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
@@ -133,7 +116,6 @@ export default function UserDashboard() {
     );
   }
 
-  // Jika user tidak login
   if (!session) return null;
 
   const user = session.user as { name: string; email: string; role: string };
@@ -141,7 +123,6 @@ export default function UserDashboard() {
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-        {/* Profile Header Section */}
         <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white">
           <div className="container mx-auto px-4 py-12">
             <div className="max-w-7xl mx-auto">
@@ -173,11 +154,8 @@ export default function UserDashboard() {
             </div>
           </div>
         </div>
-
-        {/* Content Section */}
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-7xl mx-auto">
-            {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
                 <CardHeader className="pb-3">
@@ -200,8 +178,6 @@ export default function UserDashboard() {
                 </CardHeader>
               </Card>
             </div>
-
-            {/* Events Section */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
@@ -316,8 +292,6 @@ export default function UserDashboard() {
           </div>
         </div>
       </div>
-
-      {/* Dialog Konfirmasi Pembatalan */}
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>

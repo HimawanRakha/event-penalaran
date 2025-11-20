@@ -30,10 +30,10 @@ export default function CreateEditEvent() {
 
   useEffect(() => {
     if (status === "loading") {
-      return; // Tunggu sesi selesai loading
+      return;
     }
     if (status === "unauthenticated" || !isAdmin) {
-      router.push("/"); // Tendang ke homepage jika bukan admin
+      router.push("/");
     }
   }, [status, isAdmin, router]);
 
@@ -41,14 +41,11 @@ export default function CreateEditEvent() {
     if (!isCreateMode && isLoading && status === "authenticated" && isAdmin) {
       const fetchEventData = async () => {
         try {
-          // UBAH: Pakai fetchAPI ke backend JSP
-          // Backend JSP return object Event langsung, bukan { event: ... }
           const event = await fetchAPI(`/api/events/${id}`);
 
           if (event) {
             setTitle(event.title);
             setDescription(event.description);
-            // Format tanggal agar sesuai dengan <input type="date">
             setDate(new Date(event.date).toISOString().split("T")[0]);
             setTime(event.time || "");
             setLocation(event.location);
@@ -65,14 +62,13 @@ export default function CreateEditEvent() {
             setError("Terjadi kesalahan yang tidak diketahui");
           }
         } finally {
-          setIsLoading(false); // Selesai loading
+          setIsLoading(false);
         }
       };
 
       fetchEventData();
     }
 
-    // Jika mode create, set loading ke false
     if (isCreateMode) {
       setIsLoading(false);
     }
@@ -97,19 +93,15 @@ export default function CreateEditEvent() {
       location,
       images: validImages,
       spsLink: spsLink.trim() || undefined,
-      // Kita TIDAK perlu mengirim 'createdBy'. API akan mengaturnya dari sesi server.
     };
 
     try {
-      // UBAH: Pakai fetchAPI ke backend JSP
       if (isCreateMode) {
-        // Panggil API POST untuk BUAT BARU
         await fetchAPI("/api/events", {
           method: "POST",
           body: JSON.stringify(eventData),
         });
       } else {
-        // Panggil API PUT untuk UPDATE
         await fetchAPI(`/api/events/${id}`, {
           method: "PUT",
           body: JSON.stringify(eventData),
@@ -127,7 +119,6 @@ export default function CreateEditEvent() {
     }
   };
 
-  // --- Fungsi Helper (Sudah Benar) ---
   const handleImageChange = (index: number, value: string) => {
     const newImages = [...images];
     newImages[index] = value;
@@ -144,7 +135,6 @@ export default function CreateEditEvent() {
     }
   };
 
-  // Tampilkan ini saat sesi sedang dicek ATAU saat data event sedang diambil
   if (status === "loading" || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -153,7 +143,6 @@ export default function CreateEditEvent() {
     );
   }
 
-  // Jika sudah dicek tapi bukan admin, return null (karena redirect sedang proses)
   if (!isAdmin) {
     return null;
   }
@@ -167,8 +156,6 @@ export default function CreateEditEvent() {
           <Card className="p-6">
             <form onSubmit={handleSubmit} className="space-y-6">
               {error && <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">{error}</div>}
-
-              {/* Info Dasar */}
               <div className="space-y-4">
                 <h3>Info Dasar</h3>
 
@@ -182,8 +169,6 @@ export default function CreateEditEvent() {
                   <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Deskripsikan event Anda..." rows={6} className="resize-y" required />
                 </div>
               </div>
-
-              {/* Logistik */}
               <div className="space-y-4">
                 <h3>Logistik</h3>
 
@@ -204,8 +189,6 @@ export default function CreateEditEvent() {
                   <Input id="location" type="text" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Contoh: Gedung Robotika ITS atau Online" required />
                 </div>
               </div>
-
-              {/* Media */}
               <div className="space-y-4">
                 <h3>Media</h3>
 
@@ -253,8 +236,6 @@ export default function CreateEditEvent() {
                   </div>
                 )}
               </div>
-
-              {/* SPS Link */}
               <div className="space-y-4">
                 <h3>Link Spreadsheet Pendaftaran (Opsional)</h3>
 
@@ -264,8 +245,6 @@ export default function CreateEditEvent() {
                   <p className="text-sm text-gray-500">Link ini akan ditampilkan di admin dashboard untuk tracking pendaftaran</p>
                 </div>
               </div>
-
-              {/* Sticky Submit Button */}
               <div className="sticky bottom-0 bg-white pt-4 pb-2 -mx-6 px-6 border-t">
                 <div className="flex gap-3">
                   <Button type="button" variant="outline" className="flex-1" onClick={() => router.push("/admin/dashboard")}>
