@@ -27,7 +27,7 @@ export default function Login() {
 
     try {
       const result = await signIn("credentials", {
-        redirect: false, // Kita handle redirect manual
+        redirect: false,
         email,
         password,
       });
@@ -35,9 +35,7 @@ export default function Login() {
       if (result?.error) {
         throw new Error(result.error);
       }
-
-      // Jika berhasil, redirect ke dashboard
-      router.push("/dashboard"); // Atau /admin/dashboard
+      router.push("/dashboard");
     } catch (err: any) {
       setError("Email atau password salah");
     }

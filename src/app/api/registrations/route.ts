@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route"; // Sesuaikan path
+import { authOptions } from "../auth/[...nextauth]/route";
 import dbConnect from "@/lib/dbConnect";
 import RegistrationModel from "@/models/Registration";
 import { IUser } from "@/models/User";
 
-// FUNGSI: MENGECEK APAKAH USER SUDAH TERDAFTAR
 export async function GET(request: Request) {
   const session = await getServerSession(authOptions);
   if (!session) {
@@ -33,7 +32,6 @@ export async function GET(request: Request) {
   }
 }
 
-// FUNGSI: MENDAFTARKAN USER KE EVENT
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
   if (!session) {
@@ -50,13 +48,11 @@ export async function POST(request: Request) {
 
     await dbConnect();
 
-    // Cek apakah sudah terdaftar
     const existing = await RegistrationModel.findOne({ user: user.id, event: eventId });
     if (existing) {
       return NextResponse.json({ message: "Anda sudah terdaftar" }, { status: 409 });
     }
 
-    // Buat registrasi baru
     await RegistrationModel.create({
       user: user.id,
       event: eventId,
@@ -68,7 +64,6 @@ export async function POST(request: Request) {
   }
 }
 
-// FUNGSI: MEMBATALKAN PENDAFTARAN
 export async function DELETE(request: Request) {
   const session = await getServerSession(authOptions);
   if (!session) {
@@ -77,7 +72,7 @@ export async function DELETE(request: Request) {
 
   const user = session.user as IUser;
   const { searchParams } = new URL(request.url);
-  const eventId = searchParams.get("eventId"); // Ambil dari query param
+  const eventId = searchParams.get("eventId");
 
   if (!eventId) {
     return NextResponse.json({ message: "Event ID tidak ada" }, { status: 400 });

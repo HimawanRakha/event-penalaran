@@ -29,11 +29,7 @@ export default function HomePage() {
     const fetchEvents = async () => {
       try {
         setIsLoading(true);
-
-        // UBAH: Pakai fetchAPI ke backend JSP yang return array langsung
         const data = await fetchAPI("/api/events");
-
-        // Backend JSP return array langsung, bukan { events: [...] }
         setEvents(Array.isArray(data) ? data : []);
       } catch (err: any) {
         console.error("Error fetching events:", err);
@@ -46,29 +42,24 @@ export default function HomePage() {
     fetchEvents();
   }, []);
 
-  // Filter events berdasarkan search query
   const filteredEvents = events.filter((event) => event.title.toLowerCase().includes(searchQuery.toLowerCase()) || event.location.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      {/* Hero Section - Modern */}
       <section className="relative py-20 md:py-32 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 overflow-hidden">
-        {/* Background Image */}
         <div className="absolute inset-0 z-1">
           <Image
             src="/bg-hero.jpg"
             alt="Background"
-            fill // Pengganti w-full h-full absolute
-            priority // Agar gambar diload duluan (karena ini hero section)
+            fill
+            priority
             className="object-cover opacity-70"
             sizes="100vw"
             onError={(e) => {
-              // Opsional: Log error ke console untuk debugging
               console.error("Gagal memuat gambar hero");
             }}
           />
         </div>
-        {/* Overlay untuk memastikan text tetap readable */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/80 via-indigo-600/80 to-purple-600/80" />
 
         <div className="container mx-auto px-4 text-center relative z-10">
@@ -101,7 +92,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Stats Section */}
       <section className="py-12 bg-white/50 backdrop-blur-sm border-y border-gray-200/50">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -142,7 +132,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Events Section */}
       <section id="events" className="py-16 flex-1">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -150,7 +139,6 @@ export default function HomePage() {
             <p className="text-gray-600 max-w-2xl mx-auto">Temukan event yang sesuai dengan minat dan jadwal Anda</p>
           </div>
 
-          {/* Search Bar - Modern */}
           <div className="max-w-2xl mx-auto mb-12">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -164,7 +152,6 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Loading / Error / Empty / Events */}
           {isLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[1, 2, 3, 4].map((i) => (

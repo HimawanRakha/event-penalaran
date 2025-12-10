@@ -11,7 +11,6 @@ interface Params {
   params: { id: string };
 }
 
-// GET: Mengambil SATU event (Publik)
 export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   const { id } = await context.params;
   try {
@@ -26,7 +25,6 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
   }
 }
 
-// PUT: Mengupdate SATU event (Hanya Admin)
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const session = await getServerSession(authOptions);
@@ -53,7 +51,6 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
-// DELETE: Menghapus SATU event (Hanya Admin)
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const session = await getServerSession(authOptions);
@@ -70,8 +67,6 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     if (!deletedEvent) {
       return NextResponse.json({ message: "Event tidak ditemukan" }, { status: 404 });
     }
-
-    // Juga hapus semua registrasi yang terkait dengan event ini
     await RegistrationModel.deleteMany({ event: id });
 
     return NextResponse.json({ message: "Event dan registrasi terkait dihapus" }, { status: 200 });
