@@ -16,7 +16,7 @@ export function Footer() {
               <Twitter className="h-5 w-5" />
             </a>
           </div>
-          <p className="text-sm text-gray-500">© 2025 UKM Penalaran ITS</p>
+          <p className="text-sm text-gray-500">© 2025 ManageEvent</p>
         </div>
       </div>
     </footer>
